@@ -1,6 +1,7 @@
 import requests
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.backends import default_backend
 from base64 import b64encode
 
 def encryptAdmin(value):
@@ -23,7 +24,7 @@ def encryptToken(token, param0, param1):
     key = param0.encode()   # Convert string to bytearray
     iv = param1.encode()    # Convert string to bytearray
 
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
     encryptor = cipher.encryptor()
 
     # Do padding
