@@ -16,9 +16,15 @@ def main():
     if params.password is not None:
         api.setPassword(params.password)
 
-    result = api.run(params.cmd)
+    try:
+        result = api.run(params.cmd)
+        print(result)
+    except Exception as e:
+        json = e.args[0]
+        print("The modem replied with an error message")
+        print(f'  Error code: {json["code"]}')
+        print(f'  Error message: {json["message"]}')
 
-    print(result)
 
 if __name__ == "__main__":
     main()
