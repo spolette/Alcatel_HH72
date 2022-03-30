@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 from base64 import b64encode
+import json
 
 def encryptAdmin(value):
     # Hardcoded key for encryption
@@ -99,7 +100,7 @@ class ModemAPI:
         # Update headers with token
         self.session.headers["_TclRequestVerificationToken"] = self._token
 
-    def _runCommand(self, command, **args):
+    def _runCommand(self, command: str, **args):
         message = {"jsonrpc": "2.0", "method": command, "id": "12", "params": args}
         resp = self.session.post(self._url + "/jrd/webapi", json=message)
         result = resp.json()
@@ -108,11 +109,16 @@ class ModemAPI:
 
         return result["result"]
 
-    def run(self, command: str):
+    def run(self, command: str, pretty: bool = False) -> str:
         # Login if needed
         if self._password is not None:
             if self._getLoginState() == False:
                 self._login()
 
-        return self._runCommand(command)
+        result = self._runCommand(command)
+        
+        if pretty:
+            result = json.dumps(result, indent=4, sort_keys=True)
+            
+        return result
 
