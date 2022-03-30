@@ -9,8 +9,12 @@ def main():
     argumentsParser.add_argument("-p", "--password", help="Password to access restricted commands", required=False)
     argumentsParser.add_argument("-c", "--cmd", help="Command to be run", default="GetSystemStatus", required=False)
     argumentsParser.add_argument("--pretty", help="Pretty print JSON output", required=False, action='store_true')
-    
+    argumentsParser.add_argument("-l", "--list", help="Show available commands", action="store_true")
     params = argumentsParser.parse_args()
+
+    if params.list:
+        ModemAPI.printAvailableCommands()
+        return
 
     api = ModemAPI(params.url)
 
